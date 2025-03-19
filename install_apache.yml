@@ -3,13 +3,24 @@
 - hosts: all
   become: true
   tasks:
-
-  - name: Install the htop package
-    dnf:
-      name: htop
-      state: latest
-
-  - name: Install the htop package
+  - name: update repository index apt
     apt:
-      name: htop
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install the apache(httpd) package dnf
+    dnf:
+      name: httpd
       state: latest
+    when: ansible_os_family == "RedHat"
+
+  - name: Install the apache2 package
+    apt:
+      name: apache2
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Update repository index dnf
+    dnf:
+      update_cache: yes
+    when: ansible_distribution in ["Rocky", "CentOS"]
