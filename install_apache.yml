@@ -3,24 +3,21 @@
 - hosts: all
   become: true
   tasks:
-  - name: update repository index apt
+
+  - name: Install the apache and php package for ubuntu
     apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
       update_cache: yes
     when: ansible_distribution == "Ubuntu"
 
-  - name: Install the apache(httpd) package dnf
+  - name: Install apache(httpd) and php for redhat family
     dnf:
-      name: httpd
+      name:
+        - httpd
+        - php
       state: latest
+      update_cache: yes
     when: ansible_os_family == "RedHat"
-
-  - name: Install the apache2 package
-    apt:
-      name: apache2
-      state: latest
-    when: ansible_distribution == "Ubuntu"
-
-  - name: Update repository index dnf
-    dnf:
-      update_cache: yes
-    when: ansible_distribution in ["Rocky", "CentOS"]
